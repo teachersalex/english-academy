@@ -52,14 +52,12 @@ class StateManager {
         }
         this.subscribers.get(path).add(callback);
         
-        // Return unsubscribe function
         return () => this.subscribers.get(path)?.delete(callback);
     }
 
     notify(path, value) {
         this.subscribers.get(path)?.forEach(cb => cb(value));
         
-        // Notify parent paths
         const parts = path.split('.');
         while (parts.length > 1) {
             parts.pop();
@@ -81,7 +79,6 @@ class EventBus {
         }
         this.events.get(event).add(callback);
         
-        // Return unsubscribe function
         return () => this.events.get(event)?.delete(callback);
     }
 
@@ -117,12 +114,10 @@ class Router {
             return;
         }
 
-        // Update nav
         document.querySelectorAll('.nav-item').forEach(item => {
             item.classList.toggle('active', item.dataset.page === page);
         });
 
-        // Load content
         try {
             content.innerHTML = '<div class="loading">Loading...</div>';
             const html = await loader();
@@ -140,7 +135,6 @@ class Router {
 class Auth {
     constructor() {
         this.users = {
-            // Your 20 students
             'matheus': 'english090803',
             'iasmin': 'english050307',
             'leticia': 'english843892',
@@ -160,7 +154,6 @@ class Auth {
             'duda': 'english454356',
             'kelli': 'english434567',
             'lucas': 'english98765423',
-            // Test account
             'alex': 'teacher'
         };
     }
@@ -250,7 +243,6 @@ Router.register('listening', async () => {
                     <p>Learn basic greetings and introductions</p>
                     <button class="btn-primary">Start Lesson</button>
                 </div>
-                <!-- More lessons -->
             </div>
         </div>
     `;
@@ -266,7 +258,6 @@ Router.register('reading', async () => {
                     <p>A1 Level - 500 words</p>
                     <button class="btn-primary">Read Story</button>
                 </div>
-                <!-- More stories -->
             </div>
         </div>
     `;
@@ -280,7 +271,6 @@ Router.register('progress', async () => {
         <div class="progress-page">
             <h2>Your Progress</h2>
             <div class="progress-chart">
-                <!-- Add charts here -->
                 <p>Study time: ${progress.totalMinutes || 0} minutes</p>
                 <p>Achievements: ${progress.achievements?.length || 0}</p>
             </div>
@@ -295,12 +285,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const loginError = document.getElementById('login-error');
     
-    // Check if already logged in
     if (Auth.isLoggedIn()) {
         showApp();
     }
     
-    // Login form handler
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const username = document.getElementById('username').value;
@@ -314,20 +302,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Logout handler
     document.getElementById('logout-btn').addEventListener('click', () => {
         Auth.logout();
         showLogin();
     });
     
-    // Navigation handler
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
             Router.navigate(item.dataset.page);
         });
     });
     
-    // Show app function
     function showApp() {
         const user = Auth.currentUser();
         document.getElementById('user-name').textContent = user.username;
@@ -336,7 +321,6 @@ document.addEventListener('DOMContentLoaded', () => {
         Router.navigate('dashboard');
     }
     
-    // Show login function
     function showLogin() {
         loginScreen.classList.add('active');
         appScreen.classList.remove('active');
